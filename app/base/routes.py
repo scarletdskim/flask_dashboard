@@ -2,7 +2,9 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
+import os
+import sqlite3
+import pandas as pd
 from flask import jsonify, render_template, redirect, request, url_for
 from flask_login import (
     current_user,
@@ -13,10 +15,43 @@ from flask_login import (
 
 from app import db, login_manager
 from app.base import blueprint
-from app.base.forms import LoginForm, CreateAccountForm
-from app.base.models import User
-
+from app.base.forms import LoginForm, CreateAccountForm, PredictForm
+from app.base.models import User, House
 from app.base.util import verify_pass
+from app.base import funcs
+
+## Prediction
+@blueprint.route('/predict', method=['GET', 'POST'])
+def predict():
+    DATABASE_URL = 'sqlite:///' + os.path.join(os.getcwd(), 'db.sqlite3')
+
+    # train data 
+    train_df = pd.read_sql_table('House', DATABASE_URL)
+
+    # test data
+    predict_form = PredictForm(request.form)
+    if 'predict' in request.form:
+        
+        # read form data
+        neighbourhood_group = request.form['neighbourhood_group']
+        roomtype = request.form['roomtype']
+        minimum_nights = request.form['minimum_nights']
+
+    test_array = [[neighbourhood_group, roomtype, minimum_nights]]
+    test_columns = ['neighbourhood_group', 'roomtype', 'minimum_nights']
+    test_df = pd.DataFrame(test_array, columns=test_columns)
+
+    X_train, y_train = funcs.preprocessing(train_df)
+    X_test, y_test = funcs.preprocessing(test_df)
+
+    prediction = {
+        'result' : funcs.predict_price(X_train, y_train, X_test)
+    }
+
+    return render_template('predictions.predict.html',
+                            prediction=prediction)
+
+
 
 @blueprint.route('/')
 def route_default():
