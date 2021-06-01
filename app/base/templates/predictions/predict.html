@@ -12,7 +12,7 @@
       <div class="card">
         <div class="card-header card-header-primary">
           <h4 class="card-title">
-            Set price for my Airbnb listing
+            Check the best price
           </h4>
         </div>
         <div class="card-body">
@@ -21,7 +21,7 @@
               {% if msg %}
                 <span class="text-danger">{{ msg | safe }}</span>
               {% else %}
-                Enter details of your listing. 
+                Enter details of your listing. <br>
                 We'll suggest the best price :)
               {% endif %}  
           </h6>
@@ -65,7 +65,7 @@
 
             <br />
 
-            <button type="submit" name="predict" class="btn btn-primary pull-right">Predict best price!</button>
+              <button type="submit" name="predict" class="btn btn-primary pull-left">Predict best price!</button>
 
             <div class="tim-typo">
               <p class="text-primary">
@@ -92,3 +92,4 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}
+

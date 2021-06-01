@@ -115,6 +115,13 @@ def internal_error(error):
     return render_template('page-500.html'), 500
 
 ## Prediction
+# @blueprint.route('/predict', methods=['GET', 'POST'])
+# def predict_index():
+#     predict_form = PredictForm(request.form)
+#     return render_template('predictions/predict.html',
+#                             form=predict_form
+#                             ) 
+
 @blueprint.route('/predict', methods=['GET', 'POST'])
 def predict():
     DATABASE_URL = 'sqlite:///' + os.path.join(os.getcwd(), 'db.sqlite3')
@@ -139,15 +146,16 @@ def predict():
         X_test = funcs.preprocessing(test_df)
         y_train = train_df['price']
         
-
-        # predict
-        prediction = {
-            'result' : funcs.predict_price(X_train, y_train, X_test)
-        }
-        print(prediction)
+        # here
+        # print(funcs.predict_price(X_train, y_train, X_test))
+        # predictions = {
+        #     'result' : funcs.predict_price(X_train, y_train, X_test)
+        # }
+        # print(predictions)
 
 
     return render_template('predictions/predict.html',
-                            prediction=prediction,
-                            form=predict_form)
+                            # prediction=predictions,
+                            form=predict_form
+                            )
 
