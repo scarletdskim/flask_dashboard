@@ -146,16 +146,14 @@ def predict():
         X_test = funcs.preprocessing(test_df)
         y_train = train_df['price']
         
-        # here
-        # print(funcs.predict_price(X_train, y_train, X_test))
-        # predictions = {
-        #     'result' : funcs.predict_price(X_train, y_train, X_test)
-        # }
-        # print(predictions)
+        predictions = {
+            'result' : funcs.predict_price(X_train, y_train, X_test)
+        }
+        print(predictions)
 
 
     return render_template('predictions/predict.html',
-                            # prediction=predictions,
+                            prediction=predictions,
                             form=predict_form
                             )
 
