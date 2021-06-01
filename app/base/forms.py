@@ -3,6 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from typing_extensions import runtime
 from flask_wtf import FlaskForm
 from wtforms import TextField, PasswordField, SelectField
 from wtforms.validators import InputRequired, Email, DataRequired
@@ -20,10 +21,11 @@ class CreateAccountForm(FlaskForm):
 
 class PredictForm(FlaskForm):
     neighbourhood_group = SelectField('Neighbourhood_group',
-                                      choices=[(1,'Brooklyn'), (2, 'Manhattan'), (3, 'Queens'), (4, 'Staten Island'), (5, 'Bronx')],
-                                      coerce=int
+                                      choices=[('Brooklyn'), ('Manhattan'), ('Queens'), ('Staten Island'), ('Bronx')],
+                                      coerce=str
     )
     roomtype = SelectField('Roomtype', 
-                      choices=[(1,"Private room"),(2,"Entire home/apt"),(3,"Shared room")],
-                      coerce=int)
+                      choices=[("Private room"),("Entire home/apt"),("Shared room")],
+                      coerce=str
+    )
     minimum_nights = TextField('Minimum_nights', id='night_create' , validators=[DataRequired()])

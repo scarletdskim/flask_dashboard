@@ -15,43 +15,10 @@ from flask_login import (
 
 from app import db, login_manager
 from app.base import blueprint
+from app.base import funcs
 from app.base.forms import LoginForm, CreateAccountForm, PredictForm
 from app.base.models import User, House
 from app.base.util import verify_pass
-from app.base import funcs
-
-## Prediction
-@blueprint.route('/predict', method=['GET', 'POST'])
-def predict():
-    DATABASE_URL = 'sqlite:///' + os.path.join(os.getcwd(), 'db.sqlite3')
-
-    # train data 
-    train_df = pd.read_sql_table('House', DATABASE_URL)
-
-    # test data
-    predict_form = PredictForm(request.form)
-    if 'predict' in request.form:
-        
-        # read form data
-        neighbourhood_group = request.form['neighbourhood_group']
-        roomtype = request.form['roomtype']
-        minimum_nights = request.form['minimum_nights']
-
-    test_array = [[neighbourhood_group, roomtype, minimum_nights]]
-    test_columns = ['neighbourhood_group', 'roomtype', 'minimum_nights']
-    test_df = pd.DataFrame(test_array, columns=test_columns)
-
-    X_train, y_train = funcs.preprocessing(train_df)
-    X_test, y_test = funcs.preprocessing(test_df)
-
-    prediction = {
-        'result' : funcs.predict_price(X_train, y_train, X_test)
-    }
-
-    return render_template('predictions.predict.html',
-                            prediction=prediction)
-
-
 
 @blueprint.route('/')
 def route_default():
@@ -100,7 +67,8 @@ def register():
             return render_template( 'accounts/register.html', 
                                     msg='Username already registered',
                                     success=False,
-                                    form=create_account_form)
+                                    # form=create_account_form
+                                    )
 
         # Check email exists
         user = User.query.filter_by(email=email).first()
@@ -145,3 +113,41 @@ def not_found_error(error):
 @blueprint.errorhandler(500)
 def internal_error(error):
     return render_template('page-500.html'), 500
+
+## Prediction
+@blueprint.route('/predict', methods=['GET', 'POST'])
+def predict():
+    DATABASE_URL = 'sqlite:///' + os.path.join(os.getcwd(), 'db.sqlite3')
+
+    # train data 
+    train_df = pd.read_sql_table('House', DATABASE_URL)
+
+    # test data
+    predict_form = PredictForm(request.form)
+    if request.method == 'POST':
+        resp = request.form.to_dict()
+
+        neighbourhood_group = resp['neighbourhood_group']
+        room_type = resp['roomtype']
+        minimum_nights = resp['minimum_nights']
+
+        test_array = [[neighbourhood_group, room_type, minimum_nights]]
+        test_columns = ['neighbourhood_group', 'room_type', 'minimum_nights']
+        test_df = pd.DataFrame(test_array, columns=test_columns)
+
+        X_train = funcs.preprocessing(train_df)
+        X_test = funcs.preprocessing(test_df)
+        y_train = train_df['price']
+        
+
+        # predict
+        prediction = {
+            'result' : funcs.predict_price(X_train, y_train, X_test)
+        }
+        print(prediction)
+
+
+    return render_template('predictions/predict.html',
+                            prediction=prediction,
+                            form=predict_form)
+

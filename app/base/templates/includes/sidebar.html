@@ -2,7 +2,7 @@
       <div class="logo">
         <a target="_blank" rel="noopener noreferrer" 
            href="https://appseed.us/admin-dashboards/flask-dashboard-material-design" class="simple-text logo-normal">
-          Flask Material
+          DASHBOARD
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -21,7 +21,14 @@
               <p>User Profile</p>
             </a>
           </li>
-          <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+          <li class="nav-item {% if 'predict' in segment %} active {% endif %}">
+            <a class="nav-link" href="/predict">
+              <i class="material-icons">bubble_chart</i>
+              <p>AI Price Suggestion</p>
+            </a>
+          </li>
+
+          <!-- <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
             <a class="nav-link" href="/ui-tables.html">
               <i class="material-icons">content_paste</i>
               <p>Table List</p>
@@ -57,7 +64,7 @@
               <i class="material-icons">language</i>
               <p>RTL Support</p>
             </a>
-          </li>
+          </li> -->
 
           <li class="nav-item ">
             <a class="nav-link" href="{{ url_for('base_blueprint.logout') }}" >
@@ -66,23 +73,23 @@
             </a>
           </li>
 
-          <li class="nav-item active-pro ">
+          <!-- <li class="nav-item active-pro ">
             <a class="nav-link" 
                target="_blank" rel="noopener noreferrer"  
                href="https://appseed.us/admin-dashboards/flask-dashboard-material-pro">
               <i class="material-icons">unarchive</i>
               <p>PRO Version</p>
             </a>
-          </li>
+          </li> -->
 
         {% else %}
 
           <li class="nav-item active">
             <a class="nav-link" 
                target="_blank" rel="noopener noreferrer"  
-               href="https://appseed.us/admin-dashboards/flask-dashboard-material-pro">
-              <i class="material-icons">unarchive</i>
-              <p>PRO Version</p>
+               href="https://github.com/scarletdskim/flask_dashboard">
+              <i class="material-icons">notifications</i>
+              <p>Need help?</p>
             </a>
           </li>          
 
